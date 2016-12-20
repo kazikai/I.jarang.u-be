@@ -98,6 +98,10 @@ app.get( "/api/search/shop", function( req, res ) {
         }
         responseData = JSON.parse( response.body );
         totalCount = +responseData.total;
+        if ( !totalCount ) {
+            res.send( response.body );
+            return;
+        }
         max = Math.ceil( totalCount/100 );
         console.log( totalCount );
         // 2540 , 26번 요청 되어야함
