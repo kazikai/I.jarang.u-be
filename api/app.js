@@ -17,6 +17,9 @@ var moment = require('moment');
 winston.transports.DailyRotateFile = require('winston-daily-rotate-file');
 winston.level = 'silly';
 
+
+mongoose.Promise = global.Promise;
+
 var timestamp = function(){
     return moment().format('hh:mm:ss.SSS');
 };
