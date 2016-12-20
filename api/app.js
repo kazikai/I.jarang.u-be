@@ -23,7 +23,7 @@ var timestamp = function(){
 
 var keywordSchema = new mongoose.Schema( {
     id: String,
-    keyword: String,
+    keywords: String,
     stopwords: String,
     price: Number
 } );
@@ -162,7 +162,7 @@ app.get( '/subscribe', function( req, res ){
 
     var keywordDB = new Keyword({
         id: id,
-        keyword: keyword, //아이폰 7 블랙 : url인코딩 해서
+        keywords: keyword, //아이폰 7 블랙 : url인코딩 해서
         stopwords: except, //배터리 케이스 : 구분자 space utf-8
         price: price// 그냥 INT
     });
