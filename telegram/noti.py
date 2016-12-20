@@ -12,8 +12,8 @@ import pymongo
 PORT = 27100 #27017
 
 connection = pymongo.MongoClient("localhost", PORT)
-db = connection.hackingprice #db
-prices  = db.prices #collection
+db = connection.test #db
+prices  = db.Keywords #collection
 
 #init for test : id, keywords, price
 """
