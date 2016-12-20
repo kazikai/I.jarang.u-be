@@ -181,7 +181,7 @@ app.get( '/subscribe', function( req, res ){
             logger.info('User: DB Save Error' + err );
         } else {
             logger.info( 'User save' );
-            sendMessage( id, keyword + "가 성공적으로 등록되었습니다." );
+            sendMessage( id, keyword + "를 성공적으로 등록했습니다. 현재 최저 가격은 " + price + "원 입니다." );
         }
     });
 } );
