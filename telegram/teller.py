@@ -48,9 +48,8 @@ def handle(msg):
     if text.startswith('/'):
         if text.startswith('/unsub'):
             #try to unsub
-            res = prices.remove({"id":chat_id})
+            res = prices.remove({"id":str(chat_id)})
             sendMessage( chat_id, str(res) )
-            prices.save()
         else:
             help(chat_id)
     else:
