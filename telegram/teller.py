@@ -46,7 +46,7 @@ def handle(msg):
             help(chat_id)
     else:
         help(chat_id)
-"""
+
 
 TOKEN = '319601093:AAFn2pFF_lNhagPkfrk3rWUf-rNkTqQZXRA'
 
