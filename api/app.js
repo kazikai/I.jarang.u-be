@@ -84,6 +84,7 @@ app.get( "/api/search/shop", function( req, res ) {
             display: display
         }
     };
+    console.log( options );
     request( options, function (error, response, body) {
         if ( error ) {
             return console.error('fail', error);
