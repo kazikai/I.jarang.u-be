@@ -179,9 +179,11 @@ app.get( '/subscribe', function( req, res ){
     keywordDB.save(function( err ){
         if( err ){
             logger.info('User: DB Save Error' + err );
+            res.send( "등록 실패" );
         } else {
             logger.info( 'User save' );
             sendMessage( id, keyword + "를 성공적으로 등록했습니다. 현재 최저 가격은 " + price + "원 입니다." );
+            res.send( "등록 성공" );
         }
     });
 } );
