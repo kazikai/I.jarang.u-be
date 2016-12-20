@@ -102,3 +102,4 @@ app.get( "/api/search/shop", function( req, res ) {
     });
 } );
 app.listen(3000);
+console.log( "3000" );
