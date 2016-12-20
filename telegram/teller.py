@@ -20,7 +20,7 @@ def sendMessage(id, msg):
 
 def help(id):
     sendMessage(id, """ Hacking price 봇입니다.
-https://kazikai.github.io/I.jarang.u-fe/search.html?id=%s
+http://139.162.71.151/search.html?id=%s
 """%id)
 
 def handle(msg):
