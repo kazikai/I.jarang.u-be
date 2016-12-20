@@ -187,7 +187,9 @@ app.get( '/subscribe', function( req, res ){
             res.send( "등록 실패" );
         } else {
             logger.info( 'User save' );
-            sendMessage( id, keyword + "를 성공적으로 등록했습니다. 현재 최저 가격은 " + price + "원 입니다." );
+            console.log( data );
+            sendMessage( id, keyword + " 최저가 알림을 시작합니다. 현재 최저 가격은 " + price + "원 입니다. 최저가 구독을 해지하려면 \"/unsub 를 입력하세요" );
+            //["apple iphone 7 128gb" 최저가 알림을 시작합니다. 오늘 가격은 728,000원 입니다. 이 상품의 최저가 구독을 해지하려면 "/unsub 7908"을 입력하세요.]
             res.send( "등록 성공" );
         }
     });
