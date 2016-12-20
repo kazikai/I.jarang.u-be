@@ -76,9 +76,10 @@ def crawl():
 		print id, keyword, stopwords, price
 		cands = getInfo(keyword, stopwords, price, 1)
 		for i,v in enumerate(cands):
-			title = re.sub('<(.+?)>', '', v[0])+'\n'
+			lprice = v[3]
+			title = re.sub('<(.+?)>', '', v[0])+' '+lprice+'원\n'
 			link = v[1]
-			print i, title, link
+			print i, title, link, lprice
 			sendMessage(id, title+link)
 
 		#print 'total counts:', len(cands)
