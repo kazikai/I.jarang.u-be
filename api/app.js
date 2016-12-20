@@ -158,7 +158,7 @@ function sendMessage( id, message ){
     var cmd = 'python /root/I.jarang.u-be/telegram/sendmsg.py';
     exec( cmd + " " + id + " " + message.replace( /\ /g, "\\ " ), function(error, stdout, stderr) {
         console.log( stdout );
-        res.send( "success" );
+        //res.send( "success" );
     } );
 }
 
