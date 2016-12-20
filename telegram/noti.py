@@ -56,6 +56,8 @@ def getInfo(keyword, stopwords, price, start):
 			bSkip = True
 		if int(item.producttype.string) > 3: # 일반 상품이 아니면 제거
 			bSkip = True
+		if int(item.lprice.string)<=100: #100원 이하면 제거
+			bSkip = True
 		if not bSkip:
 			cands.append( (title, item.link.string, item.image.string, item.lprice.string) )
 		#print item.productid.string
