@@ -49,7 +49,7 @@ def handle(msg):
         if text.startswith('/unsub'):
             #try to unsub
             res = prices.remove({"id":str(chat_id)})
-            sendMessage( chat_id, '최저가 구독이 해지되었습니다.' )
+            sendMessage( chat_id, '최저가 구독을 해지했습니다.' )
         else:
             help(chat_id)
     else:
