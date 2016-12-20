@@ -136,7 +136,7 @@ app.get( "/api/search/shop", function( req, res ) {
                 filterItem = responseData.items.filter( function( v ){
                     return ( v.productType === "1" || v.productType === "2" || v.productType === "3" );
                 } );
-                responseDataItem = responseDataItem.concat( responseData.items );
+                responseDataItem = responseDataItem.concat( filterItem );
                 if ( iterationCount === 0 ) {
                     console.log( "success" );
                     responseData.items = responseDataItem;
