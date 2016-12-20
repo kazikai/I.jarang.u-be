@@ -50,7 +50,7 @@ def handle(msg):
             #try to unsub
             uid = args[1]
             res = prices.remove({ "uid":uid}, {"justOne": True})
-            print res
+            sendMessage( chat_id, str(res) )
         else:
             help(chat_id)
     else:
