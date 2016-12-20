@@ -71,7 +71,7 @@ def crawl():
 		stopwords = item['stopwords']
 		price = int(item['price'])
 		id = item['id']
-		print keyword, stopwords
+		print id, keyword, stopwords, price
 		cands = getInfo(keyword, stopwords, price, 1)
 		for i,v in enumerate(cands):
 			title = re.sub('<(.+?)>', '', v[0])+'\n'
