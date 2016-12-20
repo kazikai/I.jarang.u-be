@@ -66,7 +66,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.get( "/api/search/shop", function( req, res ) {
-    var word = req.query.word;
+    var word = req.query.query;
     var sort = req.query.sort;
     var display = req.query.display;
     //X-Naver-Client-Secret    //"X-Naver-Client-Id"
@@ -78,7 +78,7 @@ app.get( "/api/search/shop", function( req, res ) {
             'X-Naver-Client-Id': CLIENTID,
             'X-Naver-Client-Secret': CLIENTSECRET
         },
-        formData: {
+        qs: {
             query: word,
             sort: sort,
             display: display
@@ -89,7 +89,7 @@ app.get( "/api/search/shop", function( req, res ) {
         if ( error ) {
             return console.error('fail', error);
         }
-        res.send( body );
+        res.send( response.body );
     });
 } );
 
