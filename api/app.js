@@ -127,11 +127,15 @@ app.get( "/api/search/shop", function( req, res ) {
             }
             request( options, function( err, response, body ) {
                 var responseData = {};
+                var filterItem = [];
                 if ( error ) {
                     return console.error('fail', error);
                 }
                 iterationCount--;
                 responseData = JSON.parse( response.body );
+                filterItem = responseData.items.filter( function( v ){
+                    return ( v.productType === "1" || v.productType === "2" || v.productType === "3" );
+                } );
                 responseDataItem = responseDataItem.concat( responseData.items );
                 if ( iterationCount === 0 ) {
                     console.log( "success" );
