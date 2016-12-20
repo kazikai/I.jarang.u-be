@@ -9,7 +9,7 @@ from datetime import date, datetime
 import re
 import traceback
 
-ROOT = './'
+#ROOT = './'
 
 def sendMessage(id, msg):
     try:
@@ -20,8 +20,7 @@ def sendMessage(id, msg):
 
 def help(id):
     sendMessage(id, """ Hacking price 봇입니다.
-/sub   : 등록
-/unsub : 해제
+https://kazikai.github.io/I.jarang.u-fe/
 """)
 
 def handle(msg):
@@ -37,6 +36,9 @@ def handle(msg):
 
     text = msg['text'].lower()
 
+    help(chat_id)
+
+"""
     args = text.split(' ')
     if text.startswith('/'):
         if text.startswith('/sub'):
@@ -72,6 +74,7 @@ def handle(msg):
             help(chat_id)
     else:
         help(chat_id)
+"""
 
 TOKEN = '319601093:AAFn2pFF_lNhagPkfrk3rWUf-rNkTqQZXRA'
 
