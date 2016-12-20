@@ -3,18 +3,27 @@
 
 import sys, re, time, traceback
 from pprint import pprint
-import sqlite3
 import telepot
 import urllib2
 from datetime import date, datetime, timedelta
 from bs4 import BeautifulSoup
+import pymongo
 
-ROOT = '/home/dsp/git/pbob/'
+PORT = 27017
 
-conn = sqlite3.connect(ROOT+'subscribe.db')
-c = conn.cursor()
-c.execute('CREATE TABLE IF NOT EXISTS subscribe( user TEXT, name TEXT, PRIMARY KEY(user) )')
-conn.commit()
+connection = pymongo.MongoClient("localhost", PORT)
+db = connection.hackingprice #db
+prices  = db.prices #collection
+
+#init for test : id, keywords, price
+prices.remove();
+prices.insert({
+	'id':'68399557',
+	#"keywords":"dji+마빅+프로+4K",
+	'keywords':'dji%20%EB%A7%88%EB%B9%85%20%ED%94%84%EB%A1%9C%204K',
+	'stopwords': '배터리 액세서리 악세서리 팩 카드 가방 케이스 RC', #구분자 : space, utf8
+	'price':1200000
+	})
 
 def sendMessage(user,msg):
 	try:
@@ -22,61 +31,56 @@ def sendMessage(user,msg):
 	except:
 		traceback.print_exc(file=sys.stdout)
 
+def getInfo(keyword, stopwords, price, start):
+	url = 'https://openapi.naver.com/v1/search/shop.xml?query='+keyword+'&display=100&start='+str(start)
+	#url = url.encode('utf-8')
+	print url
+	request = urllib2.Request( url.encode('utf-8'), headers={'X-Naver-Client-Id':'dJdCUoFXDK_PXuGff36e', 'X-Naver-Client-Secret':'r8RuqNlwCA'})
+	contents = urllib2.urlopen(request).read()
+	#print contents
+	soup = BeautifulSoup(contents, 'html.parser')
+	total = int(soup.total.string)
+	print total
+	cands = []
+	stopwords_parsed = stopwords.split(' ')
+
+	for item in soup.find_all('item'):
+		#print item
+		bSkip = False
+		title = item.title.string
+		for stopword in stopwords_parsed:
+			#print title, stopword
+			if stopword and title.lower().find(stopword.lower())>-1: # 금지어가 들어가면 제거
+				bSkip = True
+		if price <= int(item.lprice.string): # 목표가보다 크면 제거
+			bSkip = True
+		if not bSkip:
+			cands.append( (title, item.link.string, item.image.string, item.lprice.string) )
+		#print item.productid.string
+	if total>=start+100:
+		cands.extend( getInfo(keyword, stopwords, price, start+100) )
+	return cands
 
 def crawl():
+	for item in prices.find():
+		keyword = item['keywords']
+		stopwords = item['stopwords']
+		price = int(item['price'])
+		id = item['id']
+		print keyword, stopwords
+		cands = getInfo(keyword, stopwords, price, 1)
+		for i,v in enumerate(cands):
+			title = re.sub('<(.+?)>', '', v[0])+'\n'
+			link = v[1]
+			print i, title, link
+			sendMessage(id, title+link)
 
-	# get articles
-	today = time.strftime('%Y%m%d')
-	cur_hour = time.strftime('%H')
+		#print 'total counts:', len(cands)
 
-	url = 'http://supportportal.skplanet.com/Cafeteria/Interface/getMenu.aspx?command=getMenu'
-	req = urllib2.Request( url )
-	response = urllib2.urlopen(req)
-	contents = response.read()
-	soup = BeautifulSoup(contents, 'html.parser')
-	#print soup
-	#print soup.date.string, today
-	if soup.date.string != today:
-		return
-
-	msg=''
-
-	for menu in soup.find_all('menu'):
-		menuname = menu.menuname.string
-		isLunch = menuname.startswith(u"중식")
-		isDinner = menuname.startswith(u"석식")
-		if cur_hour == '17' and isDinner:
-			pass
-		elif cur_hour == '11' and isLunch:
-			pass
-		else:
-			continue
-
-		msg += menuname+'\n'
-		materials = []
-		for material in menu.find_all('material'):
-			materials.append(material.string)
-		msg += ",".join(materials)+"\n\n"
-		#msg += menu.country.string+'\n\n'
-
-	#print msg
-
-	users = []
-	c.execute('SELECT user FROM subscribe') # get subscribing users
-	for data in c.fetchall():
-		users.append( data[0] )
-
-	#print users
-
-	for user in users:
-		sendMessage( user, msg )
-
-		#delay
-		time.sleep(1)
 
 now=datetime.now()
 
-TOKEN = sys.argv[1]
+TOKEN = '319601093:AAFn2pFF_lNhagPkfrk3rWUf-rNkTqQZXRA'
 print '[',now,']' #'received token :', TOKEN
 
 bot = telepot.Bot(TOKEN)
