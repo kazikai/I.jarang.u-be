@@ -50,9 +50,6 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 
 var request = require('request');
-var cheerio = require('cheerio');
-//var https = require('https');
-var fs = require('fs');
 // db Name;
 
 logger.info( 'API Server Start!!!' );
@@ -62,25 +59,18 @@ db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
     logger.info( 'DataBase initialize success' );
-});
-
+})
 // cors setting
 app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-app.set('view engine', 'jade');
-app.set('views', __dirname + '/views/');
-app.get('/', function(req, res){
-    res.header("Content-Type", "application/json; charset=utf-8");
-});
-
 app.get( "/api/search/shop", function( req, res ) {
     var word = req.query.word;
     var sort = req.query.sort;
     var display = req.query.display;
-    //"X-Naver-Client-Id"
-    //X-Naver-Client-Secret
+    //X-Naver-Client-Secret    //"X-Naver-Client-Id"
+
     var options = {
         url: 'https://openapi.naver.com/v1/search/shop.json',
         method: "GET",
@@ -95,11 +85,15 @@ app.get( "/api/search/shop", function( req, res ) {
         }
     };
     request( options, function (error, response, body) {
-        if (error) {
+        if ( error ) {
             return console.error('fail', error);
         }
         res.send( body );
     });
 } );
-app.listen(3000);
-console.log( "3000" );
+
+app.get('/', function (req, res) {
+  res.send('Hello World!')
+});
+console.log('Example app listening on port 3000!')
+app.listen( 3000, '127.0.0.1' );
