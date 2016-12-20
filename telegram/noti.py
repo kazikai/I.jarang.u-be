@@ -9,13 +9,14 @@ from datetime import date, datetime, timedelta
 from bs4 import BeautifulSoup
 import pymongo
 
-PORT = 27017
+PORT = 27100 #27017
 
 connection = pymongo.MongoClient("localhost", PORT)
 db = connection.hackingprice #db
 prices  = db.prices #collection
 
 #init for test : id, keywords, price
+"""
 prices.remove();
 prices.insert({
 	'id':'68399557',
@@ -24,6 +25,7 @@ prices.insert({
 	'stopwords': '배터리 액세서리 악세서리 팩 카드 가방 케이스 RC', #구분자 : space, utf8
 	'price':1200000
 	})
+"""
 
 def sendMessage(user,msg):
 	try:
