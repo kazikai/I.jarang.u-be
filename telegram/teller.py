@@ -81,7 +81,7 @@ TOKEN = '319601093:AAFn2pFF_lNhagPkfrk3rWUf-rNkTqQZXRA'
 bot = telepot.Bot(TOKEN)
 pprint( bot.getMe() )
 
-bot.notifyOnMessage(handle)
+bot.message_loop(handle)
 
 print 'Listening...'
 
