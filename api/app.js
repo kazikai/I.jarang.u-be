@@ -175,6 +175,11 @@ app.get( '/subscribe', function( req, res ){
         stopwords: except, //배터리 케이스 : 구분자 space utf-8
         price: price// 그냥 INT
     });
+    if ( !id || !keyword || !except || !price ) {
+        console.log( "등록 실패" );
+        res.send( "등록 실패 값이 존재하지 않음" );
+        return;
+    }
 
     keywordDB.save(function( err ){
         if( err ){
