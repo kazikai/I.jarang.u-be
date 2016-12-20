@@ -8,6 +8,13 @@ from pprint import pprint
 from datetime import date, datetime
 import re
 import traceback
+import pymongo
+
+PORT = 27100 #27017
+
+connection = pymongo.MongoClient("localhost", PORT)
+db = connection.test #db
+prices  = db.Keywords #collection
 
 #ROOT = './'
 
@@ -41,7 +48,9 @@ def handle(msg):
     if text.startswith('/'):
         if text.startswith('/unsub'):
             #try to unsub
-            pass
+            uid = args[1]
+            res = prices.remove({ "uid":uid}, {"justOne": True})
+            print res
         else:
             help(chat_id)
     else:
