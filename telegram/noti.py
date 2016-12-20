@@ -9,13 +9,14 @@ from datetime import date, datetime, timedelta
 from bs4 import BeautifulSoup
 import pymongo
 
-PORT = 27017
+PORT = 27100 #27017
 
 connection = pymongo.MongoClient("localhost", PORT)
 db = connection.hackingprice #db
 prices  = db.prices #collection
 
 #init for test : id, keywords, price
+"""
 prices.remove();
 prices.insert({
 	'id':'68399557',
@@ -24,6 +25,7 @@ prices.insert({
 	'stopwords': '배터리 액세서리 악세서리 팩 카드 가방 케이스 RC', #구분자 : space, utf8
 	'price':1200000
 	})
+"""
 
 def sendMessage(user,msg):
 	try:
@@ -56,6 +58,8 @@ def getInfo(keyword, stopwords, price, start):
 			bSkip = True
 		if int(item.producttype.string) > 3: # 일반 상품이 아니면 제거
 			bSkip = True
+		if int(item.lprice.string)<=100: #100원 이하면 제거
+			bSkip = True
 		if not bSkip:
 			cands.append( (title, item.link.string, item.image.string, item.lprice.string) )
 		#print item.productid.string
@@ -69,7 +73,7 @@ def crawl():
 		stopwords = item['stopwords']
 		price = int(item['price'])
 		id = item['id']
-		print keyword, stopwords
+		print id, keyword, stopwords, price
 		cands = getInfo(keyword, stopwords, price, 1)
 		for i,v in enumerate(cands):
 			title = re.sub('<(.+?)>', '', v[0])+'\n'
