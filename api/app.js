@@ -8,11 +8,10 @@ var express = require('express');
 var cors = require('cors');
 var bodyParser = require( "body-parser" );
 var requestify = require('requestify');
-var PythonShell = require('python-shell');
 var mongoose = require('mongoose');
 
 var app = express();
-
+var exec = require('child_process').exec;
 var winston = require('winston');
 var moment = require('moment');
 winston.transports.DailyRotateFile = require('winston-daily-rotate-file');
@@ -21,6 +20,16 @@ winston.level = 'silly';
 var timestamp = function(){
     return moment().format('hh:mm:ss.SSS');
 };
+
+var keywordSchema = new mongoose.Schema( {
+    id: String,
+    keyword: String,
+    stopwords: String,
+    price: Number
+} );
+
+var Keyword = mongoose.model('Keyword', keywordSchema, 'Keywords');
+
 var logger = new (winston.Logger)({
     transports: [
         new (winston.transports.DailyRotateFile)({
@@ -130,13 +139,41 @@ app.get( "/api/search/shop", function( req, res ) {
         }
     });
 } );
+
+
+
+function sendMessage( id, message ){
+    var cmd = 'python /root/I.jarang.u-be/telegram/sendmsg.py';
+    exec( cmd + " " + id + " " + message.replace( /\ /g, "\\ " ), function(error, stdout, stderr) {
+        console.log( stdout );
+        res.send( "success" );
+    } );
+}
+
+
 app.get( '/subscribe', function( req, res ){
     //./sendmsg.py 68399557 hi
     var id = req.query.id;
-    var message = req.query.message;
-    PythonShell.run('../telegram/sendmsg.py ' + id + ' ' + message, function (err) {
-        if (err) throw err;
-        console.log('finished');
+    var keyword = req.query.keyword;
+    var except = req.query.except;
+    var price = req.query.price;
+
+    console.log( id, keyword, except, price )
+
+    var keywordDB = new Keyword({
+        id: id,
+        keyword: keyword, //아이폰 7 블랙 : url인코딩 해서
+        stopwords: except, //배터리 케이스 : 구분자 space utf-8
+        price: price// 그냥 INT
+    });
+
+    keywordDB.save(function( err ){
+        if( err ){
+            logger.info('User: DB Save Error' + err );
+        } else {
+            logger.info( 'User save' );
+            sendMessage( id, keyword + "가 성공적으로 등록되었습니다." );
+        }
     });
 } );
 
