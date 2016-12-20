@@ -19,7 +19,8 @@ def sendMessage(id, msg):
         traceback.print_exc(file=sys.stdout)
 
 def help(id):
-    sendMessage(id, """ Hacking price 봇입니다.
+    sendMessage(id, """Hacking price 봇입니다.
+최저가로 검색하려면 링크를 클릭하세요.
 http://139.162.71.151/search.html?id=%s
 """%id)
 
@@ -36,40 +37,11 @@ def handle(msg):
 
     text = msg['text'].lower()
 
-    help(chat_id)
-
-"""
     args = text.split(' ')
     if text.startswith('/'):
-        if text.startswith('/sub'):
-            conn = sqlite3.connect(ROOT+'subscribe.db')
-            c = conn.cursor()
-            c.execute('CREATE TABLE IF NOT EXISTS subscribe( user TEXT, name TEXT, PRIMARY KEY(user) )')
-            conn.commit()
-
-            try:
-                c.execute( 'INSERT INTO subscribe (user,name) VALUES ("%s","%s")'%(chat_id,name) )
-            except sqlite3.IntegrityError:
-                # means already inserted
-                sendMessage(chat_id, "동일한 신청목록이 존재하거나 name오류 입니다.")
-            else:
-                # means success
-                conn.commit()
-                sendMessage(chat_id, "성공적으로 추가되었습니다.")
-
-        elif text.startswith('/unsub'):
-            title = args[1]
-            conn = sqlite3.connect(ROOT+'subscribe.db')
-            c = conn.cursor()
-            try:
-                c.execute( 'DELETE FROM subscribe WHERE user="%s"'%(chat_id) )
-            except sqlite3.IntegrityError:
-                # means already inserted
-                sendMessage(chat_id, "삭제가 실패했습니다.")
-            else:
-                # means success
-                conn.commit()
-                sendMessage(chat_id, "성공적으로 삭제 되었습니다.")
+        if text.startswith('/unsub'):
+            #try to unsub
+            pass
         else:
             help(chat_id)
     else:
