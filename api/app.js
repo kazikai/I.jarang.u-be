@@ -65,12 +65,13 @@ app.use(cors());
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+
+// 조회 api
 app.get( "/api/search/shop", function( req, res ) {
     var word = req.query.query;
     var sort = req.query.sort;
     var display = req.query.display;
     //X-Naver-Client-Secret    //"X-Naver-Client-Id"
-
     var options = {
         url: 'https://openapi.naver.com/v1/search/shop.json',
         method: "GET",
@@ -81,15 +82,48 @@ app.get( "/api/search/shop", function( req, res ) {
         qs: {
             query: word,
             sort: sort,
-            display: display
+            display: 1,
+            start: 1
         }
     };
+    var responseDataItem = [];
+    var totalCount = 0;
     console.log( options );
     request( options, function (error, response, body) {
+        var responseData = {};
+        var iterationCount = 0;
+        var i, max;
         if ( error ) {
             return console.error('fail', error);
         }
-        res.send( response.body );
+        responseData = JSON.parse( response.body );
+        totalCount = +responseData.total;
+        max = Math.ceil( totalCount/100 );
+        console.log( totalCount );
+        // 2540 , 26번 요청 되어야함
+        // 45 , 5번
+        options.qs.display = 100;
+        iterationCount = max;
+        for( i = 1;  i <= max; i += 1 ) {
+            if ( i !== 1 ) {
+                options.qs.start =  ( i - 1 ) * 100;
+            }
+            request( options, function( err, response, body ) {
+                var responseData = {};
+                if ( error ) {
+                    return console.error('fail', error);
+                }
+                iterationCount--;
+                responseData = JSON.parse( response.body );
+                responseDataItem = responseDataItem.concat( responseData.items );
+                if ( iterationCount === 0) {
+                    console.log( "success" );
+                    responseData.items = responseDataItem;
+                    res.send( responseData );
+                }
+            } );
+
+        }
     });
 } );
 
