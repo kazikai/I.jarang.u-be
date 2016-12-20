@@ -116,6 +116,10 @@ app.get( "/api/search/shop", function( req, res ) {
         // 2540 , 26번 요청 되어야함
         // 45 , 5번
         options.qs.display = 100;
+
+        if ( max > 10 ) {
+            max = 11;
+        }
         iterationCount = max;
         for( i = 1;  i <= max; i += 1 ) {
             if ( i !== 1 ) {
@@ -129,9 +133,10 @@ app.get( "/api/search/shop", function( req, res ) {
                 iterationCount--;
                 responseData = JSON.parse( response.body );
                 responseDataItem = responseDataItem.concat( responseData.items );
-                if ( iterationCount === 0) {
+                if ( iterationCount === 0 ) {
                     console.log( "success" );
                     responseData.items = responseDataItem;
+                    console.log( options );
                     res.send( responseData );
                 }
             } );
