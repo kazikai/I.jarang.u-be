@@ -8,7 +8,7 @@ var express = require('express');
 var cors = require('cors');
 var bodyParser = require( "body-parser" );
 var requestify = require('requestify');
-
+var PythonShell = require('python-shell');
 var mongoose = require('mongoose');
 
 var app = express();
@@ -130,6 +130,17 @@ app.get( "/api/search/shop", function( req, res ) {
         }
     });
 } );
+app.get( '/subscribe', function( req, res ){
+    //./sendmsg.py 68399557 hi
+    var id = req.query.id;
+    var message = req.query.message;
+    PythonShell.run('../telegram/sendmsg.py ' + id + ' ' + message, function (err) {
+        if (err) throw err;
+        console.log('finished');
+    });
+} );
+
+
 
 app.get('/', function (req, res) {
   res.send('Hello World!')
