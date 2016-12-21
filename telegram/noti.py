@@ -70,7 +70,10 @@ def getInfo(keyword, stopwords, price, start):
 def crawl():
 	for item in prices.find():
 		keyword = item['keywords']
-		stopwords = item['stopwords']
+		try:
+			stopwords = item['stopwords']
+		except:
+			stopwords = []
 		price = int(item['price'])
 		id = item['id']
 		print id, keyword, stopwords, price
