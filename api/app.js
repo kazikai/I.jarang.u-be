@@ -62,6 +62,29 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 
 var request = require('request');
+
+var getComma = function( number ) {
+    var commaResult = "",
+        numberLength;
+    number = "" + number;
+    numberLength = number.length;
+    if ( number.indexOf( "," ) > -1 ) {
+        return number;
+    }
+    if( numberLength > 3 ) {
+        commaRemain = numberLength % 3;
+        for( var i = 0; i < numberLength; i += 1 ) {
+            if ( i !== 0 && i % 3 === commaRemain ) {
+                commaResult += ",";
+            }
+            commaResult += number.substr( i, 1 );
+        }
+        return commaResult;
+    } else {
+        return number;
+    }
+};
+
 // db Name;
 
 logger.info( 'API Server Start!!!' );
@@ -193,7 +216,7 @@ app.get( '/subscribe', function( req, res ){
             res.send( "등록 실패" );
         } else {
             logger.info( 'User save' );
-            sendMessage( id, keyword + " 최저가 알림을 시작합니다. 현재 최저 가격은 " + price + "원 입니다. 최저가 구독을 해지하려면 /unsub 를 입력하세요" );
+            sendMessage( id, keyword + " 최저가 알림을 시작합니다. 현재 최저 가격은 " + getComma( price ) + "원 입니다. 최저가 구독을 해지하려면 /unsub 를 입력하세요" );
             //["apple iphone 7 128gb" 최저가 알림을 시작합니다. 오늘 가격은 728,000원 입니다. 이 상품의 최저가 구독을 해지하려면 "/unsub 7908"을 입력하세요.]
             res.send( "등록 성공" );
         }
