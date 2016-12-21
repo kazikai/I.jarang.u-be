@@ -54,7 +54,7 @@ def getInfo(keyword, stopwords, price, start):
 			#print title, stopword
 			if stopword and title.lower().find(stopword.lower())>-1: # 금지어가 들어가면 제거
 				bSkip = True
-		if price <= int(item.lprice.string): # 목표가보다 크면 제거
+		if price < int(item.lprice.string): # 목표가보다 크면 제거
 			bSkip = True
 		if int(item.producttype.string) > 3: # 일반 상품이 아니면 제거
 			bSkip = True
