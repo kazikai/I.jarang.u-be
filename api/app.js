@@ -68,6 +68,9 @@ var getComma = function( number ) {
         numberLength;
     number = "" + number;
     numberLength = number.length;
+    if ( number.indexOf( "," ) > -1 ) {
+        return number;
+    }
     if( numberLength > 3 ) {
         commaRemain = numberLength % 3;
         for( var i = 0; i < numberLength; i += 1 ) {
