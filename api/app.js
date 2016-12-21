@@ -137,7 +137,9 @@ app.get( "/api/search/shop", function( req, res ) {
                 iterationCount--;
                 responseData = JSON.parse( response.body );
                 filterItem = responseData.items.filter( function( v ){
-                    return ( v.productType === "1" || v.productType === "2" || v.productType === "3" );
+                    if ( v.lprice >= 1000 && ( v.productType === "1" || v.productType === "2" || v.productType === "3" ) ) {
+                        return v;
+                    }
                 } );
                 responseDataItem = responseDataItem.concat( filterItem );
                 if ( iterationCount === 0 ) {
