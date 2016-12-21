@@ -44,7 +44,10 @@ def getInfo(keyword, stopwords, price, start):
 	total = int(soup.total.string)
 	print total
 	cands = []
-	stopwords_parsed = stopwords.split(' ')
+	try:
+		stopwords_parsed = stopwords.split(' ')
+	except:
+		stopwords_parsed = []
 
 	for item in soup.find_all('item'):
 		#print item
